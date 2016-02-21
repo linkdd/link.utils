@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from operator import lt, le, gt, ge, ne, eq
-from deepcopy import copy
+from copy import deepcopy
 from re import I, search
 
 from datetime import datetime
@@ -433,7 +433,7 @@ class Mangle(object):
         :rtype: dict
         """
 
-        obj = copy(obj)
+        obj = deepcopy(obj)
 
         for op in self.rule:
             if not op.startswith('$'):
