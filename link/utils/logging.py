@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from b3j0f.conf import Configurable, Category, Parameter
+from b3j0f.conf import Configurable, category, Parameter
 from link.utils import CONF_BASE_PATH
 
 import logging
@@ -9,12 +9,12 @@ import os
 
 @Configurable(
     paths='{0}/logging.conf'.format(CONF_BASE_PATH),
-    conf=Category(
+    conf=category(
         'LOGGING',
-        Parameter('log_format'),
-        Parameter('log_name'),
-        Parameter('log_level'),
-        Parameter('log_path')
+        Parameter(name='log_format'),
+        Parameter(name='log_name'),
+        Parameter(name='log_level'),
+        Parameter(name='log_path')
     )
 )
 class LoggingObject(object):

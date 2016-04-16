@@ -13,18 +13,17 @@ AUTHOR = 'David Delassus'
 AUTHOR_EMAIL = 'david.jose.delassus@gmail.com'
 LICENSE = 'MIT'
 REQUIREMENTS = [
-    'b3j0f.conf',
-    'six'
+    'b3j0f.conf==0.3.13',
+    'six==1.10.0'
 ]
 
 
 def get_cwd():
-    filename = sys.argv[0]
-    return os.path.dirname(os.path.abspath(os.path.expanduser(filename)))
+    return os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
 
 
 def get_version(default='0.1'):
-    sys.path.append(get_cwd())
+    sys.path.insert(0, get_cwd())
     from link import utils as mod
 
     return getattr(mod, '__version__', default)
