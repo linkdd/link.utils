@@ -69,7 +69,6 @@ setup(
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     packages=find_packages(),
-    package_dir={'': get_cwd()},
     scripts=get_scripts(),
     test_suite=get_test_suite(),
     install_requires=REQUIREMENTS
