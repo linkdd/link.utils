@@ -795,10 +795,8 @@ class Mangle(object):
             if sort is not None:
                 if isinstance(sort, dict):
                     for sortkey in sort:
-                        array.sort(
-                            key=lambda item: item[sortkey],
-                            reverse=(sort[sortkey] < 0)
-                        )
+                        keyfunc = lambda item, sk=sortkey: item[sk]
+                        array.sort(key=keyfunc, reverse=(sort[sortkey] < 0))
 
                 else:
                     array.sort(reverse=(sort < 0))
