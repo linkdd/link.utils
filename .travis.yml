@@ -6,10 +6,9 @@ python:
   - "3.4"
   - "3.5"
 install:
-  - pip install coveralls tox
+  - pip install coveralls
   - python setup.py install
 script:
-  - tox
   - coverage run setup.py test
 after_success:
   - coveralls
