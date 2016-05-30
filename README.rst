@@ -35,7 +35,7 @@ See documentation_ for more informations.
    :target: https://travis-ci.org/linkdd/link.utils
    :alt: Build status
 
-.. image:: https://coveralls.io/repos/linkdd/link.utils/badge.png?style=flat-square
+.. image:: https://coveralls.io/repos/github/linkdd/link.utils/badge.png?style=flat-square
    :target: https://coveralls.io/r/linkdd/link.utils
    :alt: Code test coverage
 
