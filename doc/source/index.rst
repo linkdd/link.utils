@@ -47,6 +47,10 @@ Check out the source code on Github_.
    :target: https://landscape.io/github/linkdd/link.utils/master
    :alt: Code Health
 
+.. image:: https://www.quantifiedcode.com/api/v1/project/3f313d6b78834bc38f0f3538b1ef381e/badge.svg
+  :target: https://www.quantifiedcode.com/app/project/3f313d6b78834bc38f0f3538b1ef381e
+  :alt: Code issues
+
 Installation
 ------------
 
