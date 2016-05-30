@@ -17,6 +17,23 @@ REQUIREMENTS = [
     'six==1.10.0'
 ]
 
+CLASSIFIERS = [
+    'Development Status :: 5 - Production/Stable',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Topic :: Utilities',
+    'Topic :: Software Development',
+    'Intended Audience :: Developers',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.0',
+    'Programming Language :: Python :: 3.1',
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: Implementation :: CPython'
+]
+
 
 def get_cwd():
     return os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
@@ -53,9 +70,7 @@ def get_scripts():
 
 
 def get_test_suite():
-    path = os.path.join(get_cwd(), 'tests')
-
-    return 'tests' if os.path.exists(path) else None
+    return 'link'
 
 
 setup(
@@ -71,5 +86,6 @@ setup(
     packages=find_packages(),
     scripts=get_scripts(),
     test_suite=get_test_suite(),
-    install_requires=REQUIREMENTS
+    install_requires=REQUIREMENTS,
+    classifiers=CLASSIFIERS
 )

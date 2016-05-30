@@ -22,11 +22,11 @@ def logrecord_to_dict(record):
 
     document = {
         'name': record.name,
-        'level': record.level,
+        'level': record.levelno,
         'pathname': record.pathname,
         'lineno': record.lineno,
         'msg': record.msg % record.args,
-        'func': record.func
+        'func': record.funcName
     }
 
     if record.exc_info is not None:
@@ -139,8 +139,8 @@ if not hasattr(cls, '__configurable__') or not cls.__configurable__:
             self.filter.log_filter = value
             self._log_filter = value
 
-        def __init__(self, *args, **kwargs):
-            super(ConfigurableLogger, self).__init__(*args, **kwargs)
+        def __init__(self, name):
+            cls.__init__(self, name)
 
             self.handler = logging.StreamHandler()
             self.addHandler(self.handler)

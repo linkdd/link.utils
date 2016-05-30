@@ -7,7 +7,8 @@ from re import I, search
 from datetime import datetime
 from time import time
 
-from six import string_types
+from b3j0f.utils.iterable import isiterable
+from six import string_types, iteritems
 
 
 def get_field(key, obj):
@@ -134,11 +135,7 @@ class Filter(object):
                 if not self.handle_nor(key, rule[key], obj):
                     return False
 
-            elif key in obj:
-                if not self.handle_field(key, rule[key], obj):
-                    return False
-
-            else:
+            elif not self.handle_field(key, rule[key], obj):
                 return False
 
         return True
@@ -161,7 +158,7 @@ class Filter(object):
         """
 
         for subrule in rule:
-            if not self._match(rule, obj):
+            if not self._match(subrule, obj):
                 return False
 
         return True
@@ -233,13 +230,18 @@ class Filter(object):
                 return not self.handle_in_field(key, rule['$nin'], obj)
 
             elif '$all' in rule:
-                return self.handle_all_feld(key, rule['$all'], obj)
+                return self.handle_all_field(key, rule['$all'], obj)
 
             else:
                 return self.handle_field_rule(key, rule, obj)
 
         else:
-            field = get_field(key, obj)
+            try:
+                field = get_field(key, obj)
+
+            except KeyError:
+                return False
+
             return (field == rule)
 
     def handle_in_field(self, key, rule, obj):
@@ -259,13 +261,13 @@ class Filter(object):
         :rtype: boolean
         """
 
-        field = get_field(key, obj)
+        try:
+            field = get_field(key, obj)
 
-        if not isinstance(field, list):
+        except KeyError:
             return False
 
-        else:
-            return field in rule
+        return field in rule
 
     def handle_all_field(self, key, rule, obj):
         """
@@ -284,7 +286,14 @@ class Filter(object):
         :rtype: boolean
         """
 
-        field = get_field(key, obj)
+        try:
+            field = get_field(key, obj)
+
+        except KeyError:
+            return False
+
+        if not isiterable(field, exclude=string_types):
+            return False
 
         for item in rule:
             if item not in field:
@@ -342,12 +351,48 @@ class Filter(object):
         """
 
         opts = I if isinstance(opts, string_types) and 'i' in opts else 0
-        field = get_field(key, obj)
+
+        try:
+            field = get_field(key, obj)
+
+        except KeyError:
+            return False
 
         if None in (field, pattern):
             return False
 
         return bool(search(pattern, field, opts))
+
+    def handle_field_cond(self, key, rule, obj, cond):
+        """
+        Handle comparison operators.
+
+        :param key: key to check in dictionary
+        :type key: str
+
+        :param rule: MongoDB sub-filter
+        :type rule: dict
+
+        :param obj: dictionary to check
+        :type obj: dict
+
+        :param cond: comparison operator
+        :type cond: callable
+
+        :returns: True if field match
+        :rtype: boolean
+        """
+
+        try:
+            field = get_field(key, obj)
+
+        except KeyError:
+            return False
+
+        if not cond(field, rule):
+            return False
+
+        return True
 
     def handle_field_rule(self, key, rule, obj):
         """
@@ -366,7 +411,6 @@ class Filter(object):
         :rtype: boolean
         """
 
-        field = get_field(key, obj)
         cond = {
             '$lt': lt,
             '$lte': le,
@@ -382,7 +426,7 @@ class Filter(object):
                     return False
 
             elif op in cond.keys():
-                if not cond[op](field, rule[op]):
+                if not self.handle_field_cond(key, rule[op], obj, cond[op]):
                     return False
 
             elif op == '$regex':
@@ -455,7 +499,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, amount in rule.iteritems():
+        for key, amount in iteritems(rule):
             try:
                 val = get_field(key, obj)
 
@@ -475,7 +519,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, amount in rule.iteritems():
+        for key, amount in iteritems(rule):
             try:
                 val = get_field(key, obj)
 
@@ -495,7 +539,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, newkey in rule.iteritems():
+        for key, newkey in iteritems(rule):
             try:
                 val = get_field(key, obj)
 
@@ -504,7 +548,7 @@ class Mangle(object):
 
             else:
                 del_field(key, obj)
-                set_field(key, obj, val)
+                set_field(newkey, obj, val)
 
     def set(self, rule, obj):
         """
@@ -517,7 +561,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, val in rule.iteritems():
+        for key, val in iteritems(rule):
             set_field(key, obj, val)
 
     def unset(self, rule, obj):
@@ -552,7 +596,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, newval in rule.iteritems():
+        for key, newval in iteritems(rule):
             try:
                 val = get_field(key, obj)
 
@@ -574,7 +618,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, newval in rule.iteritems():
+        for key, newval in iteritems(rule):
             try:
                 val = get_field(key, obj)
 
@@ -596,7 +640,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, typespec in rule.iteritems():
+        for key, typespec in iteritems(rule):
             if isinstance(typespec, bool):
                 val = datetime.now() if typespec else time()
 
@@ -622,7 +666,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, value in rule.iteritems():
+        for key, value in iteritems(rule):
             try:
                 array = get_field(key, obj)
 
@@ -652,7 +696,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, spec in rule.iteritems():
+        for key, spec in iteritems(rule):
             array = get_field(key, obj)
 
             if spec == -1:
@@ -674,7 +718,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, spec in rule.iteritems():
+        for key, spec in iteritems(rule):
             array = get_field(key, obj)
 
             if isinstance(spec, dict):
@@ -702,7 +746,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, vals in rule.iteritems():
+        for key, vals in iteritems(rule):
             array = get_field(key, obj)
 
             array = [
@@ -724,7 +768,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, spec in rule.iteritems():
+        for key, spec in iteritems(rule):
             try:
                 array = get_field(key, obj)
 
@@ -776,7 +820,7 @@ class Mangle(object):
         :type obj: dict
         """
 
-        for key, spec in rule.iteritems():
+        for key, spec in iteritems(rule):
             val = get_field(key, obj)
 
             if 'and' in spec:

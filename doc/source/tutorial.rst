@@ -44,7 +44,7 @@ Edit the file ``$B3J0F_CONF_DIR/b3j0fconf-configurable.conf``:
    {
      "CONFIGURABLE": {
        "modules": [
-         "link.utils.logging"
+         "link.utils.log"
        ]
      }
    }
@@ -55,7 +55,7 @@ Then, configure the new logging class by editing the file ``$B3J0F_CONF_DIR/link
 
    {
      "LOGGING": {
-       "log_format": "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s",
+       "log_format": "[\%(asctime)s] [\%(levelname)s] [\%(name)s] \%(message)s",
        "log_level": "INFO",
        "log_filter": {
          "name": {"$regex": "^link\..*"}

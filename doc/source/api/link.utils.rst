@@ -12,10 +12,10 @@ link.utils.filter module
     :undoc-members:
     :show-inheritance:
 
-link.utils.logging module
--------------------------
+link.utils.log module
+---------------------
 
-.. automodule:: link.utils.logging
+.. automodule:: link.utils.log
     :members:
     :undoc-members:
     :show-inheritance:
