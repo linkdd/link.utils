@@ -58,3 +58,8 @@ Installation
 
    pip install link.utils
 
+Features
+--------
+
+ * MongoDB filter and update specs implemented for Python dictionnaries
+ * Configurable logging class with logging record filter based on MongoDB spec
