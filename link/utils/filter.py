@@ -795,7 +795,10 @@ class Mangle(object):
             if sort is not None:
                 if isinstance(sort, dict):
                     for sortkey in sort:
-                        array.sort(key=sortkey, reverse=(sort[sortkey] < 0))
+                        array.sort(
+                            key=lambda item: item[sortkey],
+                            reverse=(sort[sortkey] < 0)
+                        )
 
                 else:
                     array.sort(reverse=(sort < 0))
@@ -821,7 +824,11 @@ class Mangle(object):
         """
 
         for key, spec in iteritems(rule):
-            val = get_field(key, obj)
+            try:
+                val = get_field(key, obj)
+
+            except KeyError:
+                val = 0
 
             if 'and' in spec:
                 val &= spec['and']

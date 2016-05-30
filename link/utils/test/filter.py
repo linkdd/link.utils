@@ -435,16 +435,139 @@ class TestMangle(UTCase):
         self.assertTrue(2 not in got['j'])
 
     def test_pull(self):
-        pass
+        m = Mangle({
+            '$pull': {
+                'foo': 'bar',
+                'bar': {
+                    'i': {'$gt': 5}
+                }
+            }
+        })
+
+        doc = {
+            'foo': ['bar', 'baz'],
+            'bar': [
+                {'i': 1},
+                {'i': 2},
+                {'i': 3},
+                {'i': 4},
+                {'i': 5},
+                {'i': 6},
+                {'i': 7}
+            ]
+        }
+        got = m(doc)
+
+        self.assertTrue('bar' not in got['foo'])
+        self.assertTrue('baz' in got['foo'])
+
+        for item in got['bar']:
+            self.assertTrue(item['i'] <= 5)
 
     def test_pullAll(self):
-        pass
+        m = Mangle({
+            '$pullAll': {
+                'foo': ['bar', 'baz']
+            }
+        })
+
+        doc = {
+            'foo': ['bar', 'baz', 'biz']
+        }
+        got = m(doc)
+
+        self.assertTrue('bar' not in got['foo'])
+        self.assertTrue('baz' not in got['foo'])
+        self.assertTrue('biz' in got['foo'])
 
     def test_push(self):
-        pass
+        m = Mangle({
+            '$push': {
+                'foo': 'bar',
+                'bar': {
+                    '$each': ['baz', 'biz']
+                },
+                'baz': {
+                    '$each': ['biz', 'buz'],
+                    '$sort': -1
+                },
+                'biz': {
+                    '$each': ['biz', 'buz'],
+                    '$sort': 1
+                },
+                'buz': {
+                    '$each': [{'i': 1}, {'i': 5}],
+                    '$sort': {
+                        'i': 1
+                    }
+                },
+                'boz': {
+                    '$each': ['buz', 'boz'],
+                    '$slice': 1
+                }
+            }
+        })
+
+        doc = {
+            'bar': ['bar'],
+            'baz': ['foo'],
+            'biz': ['foo'],
+            'buz': [{'i': 8}, {'i': 4}]
+        }
+        got = m(doc)
+
+        self.assertTrue('foo' in got)
+        self.assertTrue('bar' in got['foo'])
+
+        self.assertTrue('bar' in got['bar'])
+        self.assertTrue('baz' in got['bar'])
+        self.assertTrue('biz' in got['bar'])
+
+        self.assertEqual(got['baz'], ['foo', 'buz', 'biz'])
+        self.assertEqual(got['biz'], ['biz', 'buz', 'foo'])
+
+        prev = None
+
+        for item in got['buz']:
+            if prev is not None:
+                self.assertTrue(prev['i'] <= item['i'])
+
+            prev = item
+
+        self.assertTrue('boz' in got)
+        self.assertTrue('buz' in got['boz'])
+        self.assertTrue('boz' not in got['boz'])
+        self.assertEqual(len(got['boz']), 1)
 
     def test_bit(self):
-        pass
+        m = Mangle({
+            '$bit': {
+                'foo': {'and': 4},
+                'bar': {'or': 4},
+                'baz': {'xor': 4},
+                'biz': {'and': 4},
+                'buz': {'or': 4},
+                'boz': {'xor': 4}
+            }
+        })
+
+        doc = {
+            'foo': 3,
+            'bar': 3,
+            'baz': 3
+        }
+        got = m(doc)
+
+        self.assertEqual(got['foo'], 0)
+        self.assertEqual(got['bar'], 7)
+        self.assertEqual(got['baz'], 7)
+
+        self.assertTrue('biz' in got)
+        self.assertEqual(got['biz'], 0)
+        self.assertTrue('buz' in got)
+        self.assertEqual(got['buz'], 4)
+        self.assertTrue('boz' in got)
+        self.assertEqual(got['boz'], 4)
 
 
 if __name__ == '__main__':
