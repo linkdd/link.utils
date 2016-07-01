@@ -148,3 +148,24 @@ A record is transformed into a ``dict`` for filtering, it validates the followin
        }
      }
    }
+
+Code generation
+---------------
+
+Based on the library `Grako <https://bitbucket.org/apalala/grako>`_, parser code
+generation from `BNF <https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form>`_
+is provided with:
+
+.. code-block:: python
+
+   from link.utils.grammar import codegenerator
+
+
+   with open('grammar.bnf') as f:
+       module = codegenerator('mydsl', 'MyDSL', f.read())
+
+   parser = module.MyDSLParser()
+
+   with open('mycode') as f:
+       # 'start' is the default rule name used to start parsing
+       model = parser.parse(f.read(), rule_name='start')

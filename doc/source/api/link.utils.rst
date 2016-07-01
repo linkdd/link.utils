@@ -20,6 +20,14 @@ link.utils.log module
     :undoc-members:
     :show-inheritance:
 
+link.utils.grammar module
+-------------------------
+
+.. automodule:: link.utils.grammar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
