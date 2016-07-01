@@ -10,7 +10,7 @@ import sys
 
 class TestCodeGenerator(UTCase):
     def test_module(self):
-        mod = codegenerator('mydsl', 'MyDSL', 'dsl = "DSL"')
+        mod = codegenerator('mydsl', 'MyDSL', 'dsl = "DSL" ;')
 
         self.assertEqual(mod.__name__, 'mydsl')
         self.assertIn('mydsl', sys.modules)
