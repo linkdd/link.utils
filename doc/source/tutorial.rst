@@ -169,3 +169,34 @@ is provided with:
    with open('mycode') as f:
        # 'start' is the default rule name used to start parsing
        model = parser.parse(f.read(), rule_name='start')
+
+When using the ``NodeWalker`` class to traverse the model (built with the
+``ModelBuilderSemantics`` class), those two functions are usefull:
+
+.. code-block:: python
+
+   from link.utils.grammar import codegenerator, adopt_children, find_ancestor
+   from grako.model import ModelBuilderSemantics
+
+
+   with open('grammar.bnf') as f:
+       module = codegenerator('mydsl', 'MyDSL', f.read())
+
+   parser = module.MyDSLParser(semantics)
+
+   with open('mycode') as f:
+       # 'start' is the default rule name used to start parsing
+       model = parser.parse(f.read(), rule_name='start')
+
+Use this before calling the NodeWalker in order to have nodes parent member set:
+
+.. code-block:: python
+
+   adopt_children(model._ast, parent=model)
+
+When traversing the model, you may need to get informations about a parent node:
+
+   pnode = find_ancestor(node, 'ParentNode')
+
+   if pnode is not None:
+       # parent node was found
