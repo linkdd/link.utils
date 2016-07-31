@@ -28,7 +28,7 @@ See documentation_ for more informations.
    :alt: Supported Python implementations
 
 .. image:: https://img.shields.io/pypi/wheel/link.utils.svg?style=flat-square
-   :target: https://travis-ci.org/linkdd/link.utils
+   :target: https://pypi.python.org/pypi/link.utils
    :alt: Download format
 
 .. image:: https://travis-ci.org/linkdd/link.utils.svg?branch=master&style=flat-square
@@ -63,3 +63,10 @@ Features
 
  * MongoDB filter and update specs implemented for Python dictionnaries
  * Configurable logging class with logging record filter based on MongoDB spec
+
+Donating
+--------
+
+.. image:: https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.svg
+   :target: https://gratipay.com/~linkdd/
+   :alt: Support via Gratipay
