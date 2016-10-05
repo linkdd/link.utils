@@ -47,36 +47,6 @@ def codegenerator(modname, prefix, grammar):
     return module
 
 
-def adopt_children(ast, parent=None):
-    """
-    Make sure that grako Nodes have the parent property set correctly.
-
-    :param ast: Grako AST
-    :type ast: grako.model.Node, grako.util.Mapping or list
-
-    :param parent: Parent Node
-    :type parent: grako.model.Node or None
-    """
-
-    childset = set()
-
-    if isinstance(ast, Node) and ast not in childset:
-        if isinstance(parent, Node):
-            ast._parent = parent
-            childset.add(ast)
-
-    elif isinstance(ast, Mapping):
-        for c in ast.values():
-            adopt_children(c, parent=parent)
-
-    elif isinstance(ast, list):
-        for c in ast:
-            adopt_children(c, parent=parent)
-
-    for child in childset:
-        adopt_children(child._ast, parent=child)
-
-
 def find_ancestor(node, classname):
     """
     Find first node's ancestor which match class' name.

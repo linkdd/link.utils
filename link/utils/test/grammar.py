@@ -3,7 +3,7 @@
 from b3j0f.utils.ut import UTCase
 from unittest import main
 
-from link.utils.grammar import codegenerator, adopt_children, find_ancestor
+from link.utils.grammar import codegenerator, find_ancestor
 from grako.model import ModelBuilderSemantics, Node
 from grako.exceptions import FailedToken
 import sys
@@ -34,7 +34,6 @@ class TestGrammar(UTCase):
         model = parser.parse('DSL', rule_name='dsl')
         self.assertIsInstance(model, Node)
 
-        adopt_children(model._ast, parent=model)
         self.assertIs(model.sub[0].parent, model)
 
     def test_find_ancestor(self):
@@ -46,7 +45,6 @@ class TestGrammar(UTCase):
 
         parser = mod.MyDSLParser(semantics=ModelBuilderSemantics())
         model = parser.parse('DSL', rule_name='dsl')
-        adopt_children(model._ast, parent=model)
         pnode = find_ancestor(model.sub.sub, 'RootNode')
 
         self.assertIs(pnode, model)
