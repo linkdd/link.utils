@@ -1,6 +1,6 @@
 
 from grako.parser import GrakoGrammarGenerator
-from grako.codegen import codegen
+from grako.codegen.python import codegen as pythoncg
 from grako.util import Mapping
 from grako.model import Node
 
@@ -38,7 +38,7 @@ def codegenerator(modname, prefix, grammar):
 
     parser = GrakoGrammarGenerator(prefix, filename=modname)
     model = parser.parse(grammar)
-    code = codegen(model)
+    code = pythoncg(model)
 
     module = imp.new_module(modname)
     exec_(code, module.__dict__)
